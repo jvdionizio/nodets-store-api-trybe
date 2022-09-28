@@ -8,12 +8,9 @@ const orderController = {
     return res.status(200).json(orders);
   },
   addOrder: async (req: IUserAuthRequest, res: Response): Promise<Response> => {
-    const { productsIds } = req.body;
-    if (!req.userInfo) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
+    const { productsIds, userId } = req.body;
 
-    const result = await orderService.addOrder(req.userInfo, productsIds);
+    const result = await orderService.addOrder(userId, productsIds);
 
     return res.status(201).json(result);
   },

@@ -1,11 +1,13 @@
+import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { IUser } from '../interfaces/userInterface';
 
-const JWT_SECRET = 'paoComManteiga';
-const JWT_OPTIONS: jwt.SignOptions = { algorithm: 'HS256', expiresIn: '1d' };
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET || 'jwt-secret';
 
 const generateToken = (payload: IUser) => {
-  const token = jwt.sign(payload, JWT_SECRET, JWT_OPTIONS);
+  const token = jwt.sign(payload, JWT_SECRET);
   return token;
 };
 

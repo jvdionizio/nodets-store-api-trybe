@@ -1,27 +1,30 @@
-import { NextFunction, Response } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { IUserAuthRequest } from '../interfaces/userInterface';
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
-const userAuth = async (
-  req: IUserAuthRequest,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
-  const { authorization } = req.headers;
+import dotenv from 'dotenv';
 
-  if (!authorization) {
-    return res.status(401).json({ message: 'Token not found' });
-  }
+import usersModel from '../models/usersModel';
 
+dotenv.config();
+
+const secret = process.env.JWT_SECRET || 'jwt-secret';
+
+export default async (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ message: 'Token not found' });
   try {
-    const result = jwt.verify(authorization, 'jwt_secret');
+    const decoded = jwt.verify(token, secret) as any;
 
-    req.userInfo = result as JwtPayload;
+    const { username } = decoded;
+
+    const id = await usersModel.getUserId(username);
+
+    if (!id) return res.status(401).json({ message: 'Invalid token' });
+
+    req.body.userId = id;
 
     next();
-  } catch (err) {
+  } catch (error) {
     return res.status(401).json({ message: 'Invalid token' });
   }
-}; 
-
-export default userAuth;
+};

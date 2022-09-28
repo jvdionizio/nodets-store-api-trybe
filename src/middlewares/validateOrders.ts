@@ -12,16 +12,20 @@ const orderValidation = async (
   res: Response, 
   next: NextFunction,
 ): Promise<Response | void> => {
-  const { error } = schema(req.body);
+  const { productsIds } = req.body;
+  const result = schema({ productsIds });
 
-  if (error) {
+  if (result.error) {
     let errorStatus = 422;
 
-    if (error.details[0].type === 'any.required' || error.details[0].type === 'string.empty') {
+    if (
+      result.error.details[0].type === 'any.required' 
+          || result.error.details[0].type === 'string.empty'
+    ) {
       errorStatus = 400;
     }
 
-    return res.status(errorStatus).json({ message: error.message });
+    return res.status(errorStatus).json({ message: result.error.message });
   }
 
   next();

@@ -23,10 +23,10 @@ const usersModel = {
 
     return user || null;
   },
-  getUserId: async (username: string, password: string): Promise<number | null> => {
+  getUserId: async (username: string): Promise<number | null> => {
     const [result] = await connection.execute(
-      'SELECT * FROM Trybesmith.Users WHERE username=? AND password=?',
-      [username, password],
+      'SELECT * FROM Trybesmith.Users WHERE username=?',
+      [username],
     );
 
     const [user] = result as IUser[];
