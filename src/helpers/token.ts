@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import IUser from '../interfaces/userInterface';
+import { IUser } from '../interfaces/userInterface';
 
 const JWT_SECRET = 'paoComManteiga';
 const JWT_OPTIONS: jwt.SignOptions = { algorithm: 'HS256', expiresIn: '1d' };

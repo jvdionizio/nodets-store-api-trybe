@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import generateToken from '../helpers/token';
 import usersService from '../services/usersService';
@@ -13,7 +14,7 @@ const usersController = {
     const result = await usersService.getUser(username, password);
 
     if (result) {
-      const token = generateToken({ username, password });
+      const token = jwt.sign({ username, password }, 'jwt_screct');
       return res.status(200).json({ token });
     }
     return res.status(401).json({ message: 'Username or password invalid' });
