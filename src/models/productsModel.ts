@@ -12,6 +12,10 @@ const productModel = {
     const createdProduct = { id: insertId, ...product };
     return createdProduct as IProduct;
   },
+  getAllProducts: async (): Promise<IProduct[]> => {
+    const [result] = await connection.execute('SELECT * FROM Trybesmith.Products');
+    return result as IProduct[];
+  },
 };
 
 export default productModel;
